@@ -1,5 +1,6 @@
 package com.beatrizgg.todoapp.security;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
@@ -13,11 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.beatrizgg.todoapp.exceptions.GlobalExceptionHandler;
 import com.beatrizgg.todoapp.models.User;
-
-import io.jsonwebtoken.io.IOException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -42,8 +41,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             Authentication authentication = this.authenticationManager.authenticate(authToken);
             return authentication;
-        } catch (Exception e) {
-            throw new RuntimeException();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
