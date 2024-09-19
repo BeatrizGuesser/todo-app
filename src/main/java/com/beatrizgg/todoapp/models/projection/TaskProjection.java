@@ -6,4 +6,6 @@ public interface TaskProjection {
 
     public String getDescription();
 
+    public boolean isDone();
+
 }

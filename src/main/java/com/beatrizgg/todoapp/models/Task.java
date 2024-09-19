@@ -38,4 +38,7 @@ public class Task {
     @NotBlank
     private String description;
 
+    @Column(name = "done", nullable = false, updatable = true)
+    private boolean done;
+
 }

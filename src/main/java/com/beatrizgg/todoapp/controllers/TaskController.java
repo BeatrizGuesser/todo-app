@@ -59,6 +59,12 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/done/{id}")
+    public ResponseEntity<Void> doneTask(@PathVariable Long id) {
+        this.taskService.done(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         this.taskService.delete(id);

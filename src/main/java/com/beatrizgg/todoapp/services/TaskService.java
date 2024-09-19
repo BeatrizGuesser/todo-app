@@ -55,6 +55,7 @@ public class TaskService {
 
         User user = this.userService.findById(userSpringSecurity.getId());
         obj.setId(null);
+        obj.setDone(false);
         obj.setUser(user);
         obj = this.taskRepository.save(obj);
         return obj;
@@ -64,6 +65,13 @@ public class TaskService {
     public Task update(Task obj) {
         Task newObj = findById(obj.getId());
         newObj.setDescription(obj.getDescription());
+        return this.taskRepository.save(newObj);
+    }
+
+    @Transactional
+    public Task done(Long id) {
+        Task newObj = findById(id);
+        newObj.setDone(true);
         return this.taskRepository.save(newObj);
     }
 
