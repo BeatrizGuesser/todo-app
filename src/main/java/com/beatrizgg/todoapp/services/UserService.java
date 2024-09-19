@@ -5,19 +5,23 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.beatrizgg.todoapp.models.User;
-import com.beatrizgg.todoapp.models.enums.ProfileEnum;
 import com.beatrizgg.todoapp.repositories.UserRepository;
 import com.beatrizgg.todoapp.security.UserSpringSecurity;
 import com.beatrizgg.todoapp.services.exceptions.AuthorizationException;
 import com.beatrizgg.todoapp.services.exceptions.DataBindingViolationException;
 import com.beatrizgg.todoapp.services.exceptions.ObjectNotFoundException;
+import com.beatrizgg.todoapp.models.User;
+import com.beatrizgg.todoapp.models.dto.UserCreateDTO;
+import com.beatrizgg.todoapp.models.dto.UserUpdateDTO;
+import com.beatrizgg.todoapp.models.enums.ProfileEnum;
 
 @Service
 public class UserService {
@@ -32,10 +36,11 @@ public class UserService {
         UserSpringSecurity userSpringSecurity = authenticated();
         if (!Objects.nonNull(userSpringSecurity)
                 || !userSpringSecurity.hasRole(ProfileEnum.ADMIN) && !id.equals(userSpringSecurity.getId()))
-            throw new AuthorizationException("Acesso negado!");
+            throw new AuthorizationException("Access denied!");
+
         Optional<User> user = this.userRepository.findById(id);
         return user.orElseThrow(() -> new ObjectNotFoundException(
-                "Usuário não encontrado! Id: " + id + ", Tipo: " + User.class.getName()));
+                "User not found! Id: " + id + ", Type: " + User.class.getName()));
     }
 
     @Transactional
@@ -60,7 +65,7 @@ public class UserService {
         try {
             this.userRepository.deleteById(id);
         } catch (Exception e) {
-            throw new DataBindingViolationException("Não é possível excluir pois há entidades relacionadas!");
+            throw new DataBindingViolationException("It is not possible to delete as there are related entities!");
         }
     }
 
@@ -70,6 +75,20 @@ public class UserService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public User fromDTO(@Valid UserCreateDTO obj) {
+        User user = new User();
+        user.setUsername(obj.getUsername());
+        user.setPassword(obj.getPassword());
+        return user;
+    }
+
+    public User fromDTO(@Valid UserUpdateDTO obj) {
+        User user = new User();
+        user.setId(obj.getId());
+        user.setPassword(obj.getPassword());
+        return user;
     }
 
 }

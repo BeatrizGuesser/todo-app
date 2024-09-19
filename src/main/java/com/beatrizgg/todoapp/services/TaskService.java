@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.beatrizgg.todoapp.models.Task;
 import com.beatrizgg.todoapp.models.User;
 import com.beatrizgg.todoapp.models.enums.ProfileEnum;
+import com.beatrizgg.todoapp.models.projection.TaskProjection;
 import com.beatrizgg.todoapp.repositories.TaskRepository;
 import com.beatrizgg.todoapp.security.UserSpringSecurity;
 import com.beatrizgg.todoapp.services.exceptions.AuthorizationException;
@@ -27,19 +28,22 @@ public class TaskService {
 
     public Task findById(Long id) {
         Task task = this.taskRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(
-                "Tarefa não encontrada! Id: " + id + ", Tipo: " + Task.class.getName()));
+                "Task not found! Id: " + id + ", Type: " + Task.class.getName()));
+
         UserSpringSecurity userSpringSecurity = UserService.authenticated();
         if (Objects.isNull(userSpringSecurity)
                 || !userSpringSecurity.hasRole(ProfileEnum.ADMIN) && !userHasTask(userSpringSecurity, task))
-            throw new AuthorizationException("Acesso negado!");
+            throw new AuthorizationException("Access denied!");
+
         return task;
     }
 
-    public List<Task> findAllByUser() {
+    public List<TaskProjection> findAllByUser() {
         UserSpringSecurity userSpringSecurity = UserService.authenticated();
         if (Objects.isNull(userSpringSecurity))
-            throw new AuthorizationException("Acesso negado!");
-        List<Task> tasks = this.taskRepository.findByUser_Id(userSpringSecurity.getId());
+            throw new AuthorizationException("Access denied!");
+
+        List<TaskProjection> tasks = this.taskRepository.findByUser_Id(userSpringSecurity.getId());
         return tasks;
     }
 
@@ -47,7 +51,8 @@ public class TaskService {
     public Task create(Task obj) {
         UserSpringSecurity userSpringSecurity = UserService.authenticated();
         if (Objects.isNull(userSpringSecurity))
-            throw new AuthorizationException("Acesso negado!");
+            throw new AuthorizationException("Access denied!");
+
         User user = this.userService.findById(userSpringSecurity.getId());
         obj.setId(null);
         obj.setUser(user);
@@ -67,7 +72,7 @@ public class TaskService {
         try {
             this.taskRepository.deleteById(id);
         } catch (Exception e) {
-            throw new DataBindingViolationException("Não é possível excluir pois há entidades relacionadas!");
+            throw new DataBindingViolationException("It is not possible to delete as there are related entities!");
         }
     }
 
