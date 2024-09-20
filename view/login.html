@@ -1,44 +1,56 @@
+<!DOCTYPE html>
 <html lang="en">
-
-</html>
 
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login Page</title>
+    <title>Login - To-Do App</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.js"></script>
-
     <script src="scripts/login.js"></script>
-    <!-- 
-      Credits: https://frontendshape.com/post/bootstrap-5-login-form-page-example
-    -->
+    <style>
+        .bg-custom-gradi { background: linear-gradient(to right bottom, #ad0cd0, #9805d0, #8104cf, #6507cf, #410dce); }
+        .bg-custom-gradi:hover { background: linear-gradient(to right bottom, #b33fd5, #a335d5, #8f2fd4, #752fd3, #5235d2); }
+        .bg-custom-purple { background-color: #8e44ab; }
+    </style>
 </head>
 
-<body>
-    <!-- OK Toast -->
-    <div id="okToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
+<body class="bg-dark text-light min-vh-100">
+
+    <div id="okToast" class="toast bg-light text-dark" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-light">
             <strong class="me-auto">Success</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-        <div class="toast-body">
-            Successfully login, redirecting to logged area.
-        </div>
+        <div class="toast-body"></div>
     </div>
 
-    <div class="vh-100 d-flex justify-content-center align-items-center">
+    <div id="errorToast" class="toast bg-light text-dark" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-danger text-light">
+            <strong class="me-auto">Error</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body"></div>
+    </div>
+
+    <div class="vh-100 d-flex flex-column justify-content-center align-items-center">
+        <h1 class="fw-bold mb-4 text-uppercase"
+            style="background: -webkit-linear-gradient(#ad0cd0, #9805d0, #8104cf, #6507cf, #410dce); background-clip: text;-webkit-text-fill-color: transparent;">
+            To-Do App
+        </h1>
         <div class="container">
             <div class="row d-flex justify-content-center">
                 <div class="col-12 col-md-8 col-lg-6">
                     <div class="card bg-white">
-                        <div class="card-body p-5">
+                        <div class="bg-dark card-body text-light p-5">
                             <form class="mb-3 mt-md-4">
                                 <h2 class="fw-bold mb-2 text-uppercase">
-                                    To-Do Simple App - Login
+                                    Login
                                 </h2>
-                                <p class="mb-2">Please enter your login and password!</p>
+                                <p class="mb-2">
+                                    Please enter your login and password!
+                                </p>
                                 <div class="mb-3">
                                     <label class="form-label">Username</label>
                                     <input type="text" class="form-control" required="true" id="username" />
@@ -49,7 +61,8 @@
                                         id="password" />
                                 </div>
                                 <div class="d-grid">
-                                    <button class="btn btn-outline-dark" onclick="login()" type="button">
+                                    <button type="button" id="requestBtn" class="btn bg-custom-gradi text-light"
+                                        onclick="login()">
                                         Login
                                     </button>
                                 </div>
@@ -57,7 +70,7 @@
                             <div>
                                 <p class="mb-0 text-center">
                                     Don't have an account?
-                                    <a href="signup.html" class="text-primary fw-bold">Sign Up</a>
+                                    <a href="login.html" class="text-primary fw-bold">Sign Up</a>
                                 </p>
                             </div>
                         </div>
