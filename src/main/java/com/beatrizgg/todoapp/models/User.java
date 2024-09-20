@@ -62,6 +62,18 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<Integer> profiles = new HashSet<>();
 
+    @Column(name = "tasksLeft", nullable = false, updatable = true)
+    @JsonProperty(access = Access.READ_ONLY)
+    private int tasksLeft;
+
+    @Column(name = "tasksDone", nullable = false, updatable = true)
+    @JsonProperty(access = Access.READ_ONLY)
+    private int tasksDone;
+
+    @Column(name = "tasksTotal", nullable = false, updatable = true)
+    @JsonProperty(access = Access.READ_ONLY)
+    private int tasksTotal;
+
     public Set<ProfileEnum> getProfiles() {
         return this.profiles.stream().map(x -> ProfileEnum.toEnum(x)).collect(Collectors.toSet());
     }

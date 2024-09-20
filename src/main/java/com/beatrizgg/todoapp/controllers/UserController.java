@@ -50,13 +50,13 @@ public class UserController {
         obj.setId(id);
         User user = this.userService.fromDTO(obj);
         this.userService.update(user);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         this.userService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
 }

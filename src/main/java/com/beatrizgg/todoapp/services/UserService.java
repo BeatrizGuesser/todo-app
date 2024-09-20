@@ -48,6 +48,9 @@ public class UserService {
         obj.setId(null);
         obj.setPassword(this.bCryptPasswordEncoder.encode(obj.getPassword()));
         obj.setProfiles(Stream.of(ProfileEnum.USER.getCode()).collect(Collectors.toSet()));
+        obj.setTasksLeft(0);
+        obj.setTasksDone(0);
+        obj.setTasksTotal(0);
         obj = this.userRepository.save(obj);
         return obj;
     }

@@ -12,10 +12,12 @@ import com.beatrizgg.todoapp.models.User;
 import com.beatrizgg.todoapp.models.enums.ProfileEnum;
 import com.beatrizgg.todoapp.models.projection.TaskProjection;
 import com.beatrizgg.todoapp.repositories.TaskRepository;
+import com.beatrizgg.todoapp.repositories.UserRepository;
 import com.beatrizgg.todoapp.security.UserSpringSecurity;
 import com.beatrizgg.todoapp.services.exceptions.AuthorizationException;
 import com.beatrizgg.todoapp.services.exceptions.DataBindingViolationException;
 import com.beatrizgg.todoapp.services.exceptions.ObjectNotFoundException;
+import com.beatrizgg.todoapp.services.exceptions.TaskAlreadyDoneException;
 
 @Service
 public class TaskService {
@@ -25,6 +27,9 @@ public class TaskService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public Task findById(Long id) {
         Task task = this.taskRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(
@@ -58,6 +63,10 @@ public class TaskService {
         obj.setDone(false);
         obj.setUser(user);
         obj = this.taskRepository.save(obj);
+
+        user.setTasksLeft((int) user.getTasks().stream().filter(t -> !t.isDone()).count());
+        user.setTasksTotal(user.getTasksLeft() + user.getTasksDone());
+        this.userRepository.save(user);
         return obj;
     }
 
@@ -72,15 +81,30 @@ public class TaskService {
     public Task done(Long id) {
         Task newObj = findById(id);
         newObj.setDone(true);
-        return this.taskRepository.save(newObj);
+        Task task = this.taskRepository.save(newObj);
+
+        User user = newObj.getUser();
+        user.setTasksLeft((int) user.getTasks().stream().filter(t -> !t.isDone()).count());
+        user.setTasksDone((int) user.getTasks().stream().filter(t -> t.isDone()).count());
+        user.setTasksTotal(user.getTasksLeft() + user.getTasksDone());
+        this.userRepository.save(user);
+        return task;
     }
 
     public void delete(Long id) {
-        findById(id);
-        try {
-            this.taskRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new DataBindingViolationException("It is not possible to delete as there are related entities!");
+        Task task = findById(id);
+        User user = task.getUser();
+        if (task.isDone()) {
+            throw new TaskAlreadyDoneException("Cannot delete a task that is already completed!");
+        } else {
+            try {
+                this.taskRepository.deleteById(id);
+                user.setTasksLeft((int) user.getTasks().stream().filter(t -> !t.isDone()).count());
+                user.setTasksTotal(user.getTasksLeft() + user.getTasksDone());
+                this.userRepository.save(user);
+            } catch (Exception e) {
+                throw new DataBindingViolationException("It is not possible to delete as there are related entities!");
+            }
         }
     }
 

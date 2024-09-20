@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.beatrizgg.todoapp.services.exceptions.AuthorizationException;
 import com.beatrizgg.todoapp.services.exceptions.DataBindingViolationException;
 import com.beatrizgg.todoapp.services.exceptions.ObjectNotFoundException;
+import com.beatrizgg.todoapp.services.exceptions.TaskAlreadyDoneException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -180,6 +181,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler imple
         response.setContentType("application/json");
         ErrorResponse errorResponse = new ErrorResponse(status, "Username or password are invalid");
         response.getWriter().append(errorResponse.toJson());
+    }
+
+    @ExceptionHandler(TaskAlreadyDoneException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleTaskAlreadyDoneException(
+            TaskAlreadyDoneException taskAlreadyDoneException,
+            WebRequest request) {
+        log.error("Attempted to delete a completed task", taskAlreadyDoneException);
+        return buildErrorResponse(
+                taskAlreadyDoneException,
+                taskAlreadyDoneException.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                request);
     }
 
 }
