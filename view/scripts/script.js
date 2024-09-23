@@ -1,8 +1,19 @@
-const tasksEndpoint = "http://localhost:8080/task/user";
-
 // Loading
 function hideLoader() {
     document.getElementById("loading").style.display = "none";
+}
+
+// Display Toast
+function showToast(id, message) {
+    const toastElement = document.querySelector(id);
+    const toastBody = toastElement.querySelector('.toast-body');
+    toastBody.textContent = message;
+
+    toastElement.style.zIndex = "1056";
+    toastElement.style.position = "fixed";
+
+    const toast = new bootstrap.Toast(toastElement);
+    toast.show();
 }
 
 // Display Tasks
@@ -34,7 +45,7 @@ function show(tasks) {
 async function getTasks() {
     let key = "Authorization";
     try {
-        const response = await fetch(tasksEndpoint, {
+        const response = await fetch("http://localhost:8080/task/user", {
             method: "GET",
             headers: new Headers({
                 Authorization: localStorage.getItem(key),
@@ -57,6 +68,55 @@ async function getTasks() {
     }
 }
 
+// Post New Task
+async function postTask() {
+    let description = document.getElementById("taskDescription").value;
+
+    console.log(description);
+
+    if (description) {
+        let key = "Authorization";
+        try {
+            const response = await fetch("http://localhost:8080/task", {
+                method: "POST",
+                headers: new Headers({
+                    "Content-Type": "application/json; charset=utf8",
+                    Accept: "application/json",
+                    Authorization: localStorage.getItem(key),
+                }),
+                body: JSON.stringify({
+                    description: description,
+                }),
+            });
+            
+            if (response.ok) {
+                showToast("#okToast", "Task created successfully.");
+                getTasks();
+            } else {
+                const errorData = await response.json();
+                const errorMessage = errorData.message || "Failed to create task.";
+                showToast("#errorToast", errorMessage);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            showToast("#errorToast", "An unexpected error occurred while creating the task.");
+        }
+    } else {
+        showToast("#errorToast", "Please fill in the task description.");
+    }
+    const modal = bootstrap.Modal.getInstance(document.getElementById('taskModal'));
+    modal.hide();
+}
+
+// Reset modal
+document.addEventListener('DOMContentLoaded', function() {
+    var taskModal = document.getElementById('taskModal');
+    taskModal.addEventListener('hidden.bs.modal', function () {
+        document.getElementById('taskForm').reset();
+    });
+});
+
+// Check Authorization
 document.addEventListener("DOMContentLoaded", function (event) {
     if (!localStorage.getItem("Authorization"))
         window.location = "/view/login.html";
