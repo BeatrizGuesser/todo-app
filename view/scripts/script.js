@@ -45,11 +45,11 @@ function show(tasks) {
 }
 
 
-// Display Tasks
-async function getTasks() {
+// Display UnDone Tasks
+async function getUnDoneTasks() {
     let key = "Authorization";
     try {
-        const response = await fetch("http://localhost:8080/task/user", {
+        const response = await fetch("http://localhost:8080/task/undone", {
             method: "GET",
             headers: new Headers({
                 Authorization: localStorage.getItem(key),
@@ -58,7 +58,7 @@ async function getTasks() {
 
         if (response.ok) {
             var data = await response.json();
-            console.log("get tasks: " + data);
+            console.log("get undone tasks: " + data);
             if (response) hideLoader();
             show(data);
         } else {
@@ -95,7 +95,7 @@ async function postTask() {
             
             if (response.ok) {
                 showToast("#okToast", "Task created successfully.");
-                getTasks();
+                getUnDoneTasks();
             } else {
                 const errorData = await response.json();
                 const errorMessage = errorData.message || "Failed to create task.";
@@ -126,7 +126,7 @@ async function deleteTask(taskId) {
 
         if (response.ok) {
             showToast("#okToast", "Task deleted successfully.");
-            getTasks();
+            getUnDoneTasks();
         } else {
             const errorData = await response.json();
             const errorMessage = errorData.message || "Failed to delete task.";
@@ -135,6 +135,32 @@ async function deleteTask(taskId) {
     } catch (error) {
         console.error("Error:", error);
         showToast("#errorToast", "An unexpected error occurred while deleting task.");
+    }
+}
+
+// Done Task
+async function doneTask(taskId) {
+    console.log(taskId);
+    let key = "Authorization";
+    try {
+        const response = await fetch(`http://localhost:8080/task/done/${taskId}`, {
+            method: "PUT",
+            headers: new Headers({
+                Authorization: localStorage.getItem(key),
+            }),
+        });
+
+        if (response.ok) {
+            showToast("#okToast", "Task done successfully.");
+            getUnDoneTasks();
+        } else {
+            const errorData = await response.json();
+            const errorMessage = errorData.message || "Failed to done task.";
+            showToast("#errorToast", errorMessage);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        showToast("#errorToast", "An unexpected error occurred while done task.");
     }
 }
 
@@ -152,4 +178,4 @@ document.addEventListener("DOMContentLoaded", function (event) {
         window.location = "/view/login.html";
 });
 
-getTasks();
+getUnDoneTasks();
