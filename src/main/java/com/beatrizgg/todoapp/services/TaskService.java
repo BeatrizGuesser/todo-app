@@ -52,6 +52,24 @@ public class TaskService {
         return tasks;
     }
 
+    public List<TaskProjection> findAllDoneByUser() {
+        UserSpringSecurity userSpringSecurity = UserService.authenticated();
+        if (Objects.isNull(userSpringSecurity))
+            throw new AuthorizationException("Access denied!");
+
+        List<TaskProjection> tasks = this.taskRepository.findByUser_IdAndDoneTrue(userSpringSecurity.getId());
+        return tasks;
+    }
+
+    public List<TaskProjection> findAllUnDoneByUser() {
+        UserSpringSecurity userSpringSecurity = UserService.authenticated();
+        if (Objects.isNull(userSpringSecurity))
+            throw new AuthorizationException("Access denied!");
+
+        List<TaskProjection> tasks = this.taskRepository.findByUser_IdAndDoneFalse(userSpringSecurity.getId());
+        return tasks;
+    }
+
     @Transactional
     public Task create(Task obj) {
         UserSpringSecurity userSpringSecurity = UserService.authenticated();

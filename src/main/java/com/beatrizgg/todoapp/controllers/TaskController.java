@@ -42,6 +42,18 @@ public class TaskController {
         return ResponseEntity.ok().body(objs);
     }
 
+    @GetMapping("/done")
+    public ResponseEntity<List<TaskProjection>> findAllDoneByUser() {
+        List<TaskProjection> objs = this.taskService.findAllDoneByUser();
+        return ResponseEntity.ok().body(objs);
+    }
+
+    @GetMapping("/undone")
+    public ResponseEntity<List<TaskProjection>> findAllUnDoneByUser() {
+        List<TaskProjection> objs = this.taskService.findAllUnDoneByUser();
+        return ResponseEntity.ok().body(objs);
+    }
+
     @PostMapping
     @Validated
     public ResponseEntity<Void> create(@Valid @RequestBody Task obj) {

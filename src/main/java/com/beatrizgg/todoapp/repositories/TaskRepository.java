@@ -13,6 +13,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<TaskProjection> findByUser_Id(Long id);
 
+    List<TaskProjection> findByUser_IdAndDoneTrue(Long userId);
+    
+    List<TaskProjection> findByUser_IdAndDoneFalse(Long userId);
+
     // @Query(value = "SELECT t FROM Task t WHERE t.user.id = :id")
     // List<Task> findByUser_Id(@Param("id") Long id);
 
