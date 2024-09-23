@@ -88,6 +88,30 @@
         </div>
     </div>
 
+    <!-- Update Task Modal -->
+    <div class="modal fade" id="taskModalUpdate" tabindex="-1" aria-labelledby="taskModalUpdateLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header custom-gradi text-light">
+                    <h5 class="modal-title" id="taskModalUpdateLabel">Update Task</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="taskFormUpdate">
+                        <div class="mb-3">
+                            <label class="form-label custom-purple">Description</label>
+                            <textarea class="form-control" required="true" id="taskDescriptionUpdate" rows="5"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn bg-custom-gradi text-light" onclick="updateTask()">Save</button>
+                    <button type="button" class="btn bg-custom-gradi text-light" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>

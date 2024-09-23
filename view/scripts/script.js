@@ -27,7 +27,7 @@ function show(tasks) {
                         <h5 class="card-title text-dark">Task ${task.id}</h5>
                         <p class="card-text flex-grow-1">${task.description}</p>
                         <div class="mt-auto">
-                            <button type="button" class="btn btn-light btn-sm  text-primary me-1" onclick="updateTask(${task.id})">
+                            <button type="button" class="btn btn-light btn-sm  text-primary me-1" onclick="getTask(${task.id})">
                                 Update <i class="bi bi-pencil"></i>
                             </button>
                             <button type="button" class="btn btn-light btn-sm text-danger me-1" onclick="deleteTask(${task.id})">
@@ -112,6 +112,79 @@ async function postTask() {
     modal.hide();
 }
 
+// Get Task By Id
+async function getTask(taskId) {
+    console.log(taskId);
+    let key = "Authorization";
+    try {
+        const response = await fetch(`http://localhost:8080/task/${taskId}`, {
+            method: "GET",
+            headers: new Headers({
+                Authorization: localStorage.getItem(key),
+            }),
+        });
+
+        if (response.ok) {
+            const task = await response.json();
+            const desc = task.description;
+            console.log("Description fetched: " + desc);
+
+            document.getElementById("taskDescriptionUpdate").value = desc;
+
+            document.getElementById("taskModalUpdate").setAttribute('data-task-id', taskId);
+
+            const modal = new bootstrap.Modal(document.getElementById('taskModalUpdate'));
+            modal.show();
+        } else {
+            showToast("#errorToast", "Failed to get the task.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        showToast("#errorToast", "An unexpected error occurred while getting the task.");
+    }
+}
+
+// Update Task
+async function updateTask() {
+    const taskId = document.getElementById("taskModalUpdate").getAttribute('data-task-id');
+    const description = document.getElementById("taskDescriptionUpdate").value;
+ 
+    console.log("Updating task id " + taskId + " with description: " + description);
+ 
+    if (description) {
+         let key = "Authorization";
+        try {
+            const response = await fetch(`http://localhost:8080/task/${taskId}`, {
+                method: "PUT",
+                headers: new Headers({
+                    "Content-Type": "application/json; charset=utf8",
+                    Accept: "application/json",
+                    Authorization: localStorage.getItem(key),
+                }),
+                body: JSON.stringify({
+                    description: description,
+                }),
+            });
+ 
+            if (response.ok) {
+                showToast("#okToast", "Task updated successfully.");
+                getUnDoneTasks();
+            } else {
+                const errorData = await response.json();
+                const errorMessage = errorData.message || "Failed to update task.";
+                showToast("#errorToast", errorMessage);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            showToast("#errorToast", "An unexpected error occurred while updating the task.");
+        }
+    } else {
+        showToast("#errorToast", "Please fill in the task description.");
+    }
+    const modal = bootstrap.Modal.getInstance(document.getElementById('taskModalUpdate'));
+    modal.hide();
+ }
+
 // Delete Task
 async function deleteTask(taskId) {
     console.log(taskId);
@@ -166,9 +239,18 @@ async function doneTask(taskId) {
 
 // Reset modal
 document.addEventListener('DOMContentLoaded', function() {
-    var taskModal = document.getElementById('taskModal');
-    taskModal.addEventListener('hidden.bs.modal', function () {
-        document.getElementById('taskForm').reset();
+    // Seleciona todos os elementos com a classe 'modal'
+    var modals = document.querySelectorAll('.modal');
+    
+    // Para cada modal, adiciona o evento de reset
+    modals.forEach(function(modal) {
+        modal.addEventListener('hidden.bs.modal', function () {
+            // Encontra o formulário dentro deste modal específico
+            var form = this.querySelector('form');
+            if (form) {
+                form.reset();
+            }
+        });
     });
 });
 
