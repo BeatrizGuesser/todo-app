@@ -27,10 +27,13 @@ function show(tasks) {
                         <h5 class="card-title text-dark">Task ${task.id}</h5>
                         <p class="card-text flex-grow-1">${task.description}</p>
                         <div class="mt-auto">
-                            <button type="button" class="btn btn-light btn-sm me-2" onclick="getTask(${task.id})">
+                            <button type="button" class="btn btn-light btn-sm  text-primary me-1" onclick="updateTask(${task.id})">
                                 Update <i class="bi bi-pencil"></i>
                             </button>
-                            <button type="button" class="btn btn-success btn-sm" onclick="deleteTask(${task.id})">
+                            <button type="button" class="btn btn-light btn-sm text-danger me-1" onclick="deleteTask(${task.id})">
+                                Delete <i class="bi bi-trash"></i>
+                            </button>
+                            <button type="button" class="btn btn-light btn-sm text-success me-1" onclick="doneTask(${task.id})">
                                 Done <i class="bi bi-check-circle"></i>
                             </button>
                         </div>
@@ -40,6 +43,7 @@ function show(tasks) {
     }
     document.getElementById("tasks").innerHTML = postIts;
 }
+
 
 // Display Tasks
 async function getTasks() {
@@ -106,6 +110,32 @@ async function postTask() {
     }
     const modal = bootstrap.Modal.getInstance(document.getElementById('taskModal'));
     modal.hide();
+}
+
+// Delete Task
+async function deleteTask(taskId) {
+    console.log(taskId);
+    let key = "Authorization";
+    try {
+        const response = await fetch(`http://localhost:8080/task/${taskId}`, {
+            method: "DELETE",
+            headers: new Headers({
+                Authorization: localStorage.getItem(key),
+            }),
+        });
+
+        if (response.ok) {
+            showToast("#okToast", "Task deleted successfully.");
+            getTasks();
+        } else {
+            const errorData = await response.json();
+            const errorMessage = errorData.message || "Failed to delete task.";
+            showToast("#errorToast", errorMessage);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        showToast("#errorToast", "An unexpected error occurred while deleting task.");
+    }
 }
 
 // Reset modal
