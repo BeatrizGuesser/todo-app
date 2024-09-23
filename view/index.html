@@ -2,35 +2,43 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ToDo Simple App</title>
-  <script src="./scripts/script.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.js"></script>
+    <script src="./scripts/script.js"></script>
+    <style>
+        .bg-custom-gradi { background: linear-gradient(to right bottom, #ad0cd0, #9805d0, #8104cf, #6507cf, #410dce); }
+        .bg-custom-gradi:hover { background: linear-gradient(to right bottom, #b33fd5, #a335d5, #8f2fd4, #752fd3, #5235d2); }
+        .bg-custom-purple { background-color: #8e44ab; }
+    </style>
 </head>
 
-<body>
-  <div class="d-flex justify-content-center">
-    <div class="spinner-border" role="status" id="loading"></div>
-  </div>
+<body class="bg-dark text-light min-vh-100 mb-3">
 
-  <div class="d-flex">
-    <p class="h1 text-center flex-grow-1">Suas tarefas</p>
-    <button type="button" class="btn btn-outline-dark text-left"
-      onclick="localStorage.removeItem('Authorization'); window.location = '/view/login.html'">
-      SignOut
-    </button>
-  </div>
+    <!-- Loading -->
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status" id="loading"></div>
+    </div>
 
-  <table class="table table-hover">
-    <tbody id="tasks"></tbody>
-  </table>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mx-3">
+        <button type="button" class="btn text-light" onclick="localStorage.removeItem('Authorization'); window.location = '/view/login.html'">
+            SignOut
+        </button>
+        <p class="h1 text-center mt-2" id="title">Welcome! <br> Check Your Tasks</p>
+        <button onclick="showProfileInfo()" type="button" class="btn text-light">
+            Profile <i class="bi bi-person"></i>
+        </button>
+    </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
-    crossorigin="anonymous"></script>
+    <!-- Display Tasks -->
+    <div class="container mt-4">
+        <div id="tasks" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4"></div>
+    </div>
+
 </body>
 
 </html>
