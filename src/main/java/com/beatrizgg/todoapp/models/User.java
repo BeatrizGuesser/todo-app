@@ -59,7 +59,7 @@ public class User {
     @Column(name = "profile", nullable = false)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_profile")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Set<Integer> profiles = new HashSet<>();
 
     @Column(name = "tasksLeft", nullable = false, updatable = true)

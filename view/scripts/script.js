@@ -1,3 +1,5 @@
+let userId = null;
+
 // Loading
 function hideLoader() {
     document.getElementById("loading").style.display = "none";
@@ -237,15 +239,56 @@ async function doneTask(taskId) {
     }
 }
 
+// Show Profile Info
+function showProfileInfo() {
+    var profileSection = document.getElementById("profileSection");
+    profileSection.classList.remove("d-none");
+    getUserInfo();
+}
+
+// Hide Profile Info
+function hideProfileInfo() {
+    var profileSection = document.getElementById("profileSection");
+    profileSection.classList.add("d-none");
+}
+
+// Get User Logged Info
+async function getUserInfo() {
+    let key = "Authorization";
+    try {
+        const response = await fetch("http://localhost:8080/user/info", {
+            method: "GET",
+            headers: new Headers({
+                Authorization: localStorage.getItem(key),
+            }),
+        });
+
+        if (response.ok) {
+            var data = await response.json();
+            console.log(data);
+            const name = data.username;
+            document.getElementById("title").innerHTML = `Welcome, ${name.charAt(0).toUpperCase() + name.slice(1)}! <br> Check Your Tasks`;
+            document.getElementById("username").innerHTML = name.charAt(0).toUpperCase() + name.slice(1);
+            document.getElementById("profile").innerHTML = `Profile: ${data.profiles}`;
+            document.getElementById("tasksLeft").innerHTML = data.tasksLeft;
+            document.getElementById("tasksDone").innerHTML = data.tasksDone;
+            document.getElementById("tasksTotal").innerHTML = data.tasksTotal;
+        } else {
+            const errorData = await response.json();
+            const errorMessage = errorData.message || "Failed to fetch user info.";
+            showToast("#errorToast", errorMessage);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        showToast("#errorToast", "An unexpected error occurred while fetching user info.");
+    }
+}
+
 // Reset modal
 document.addEventListener('DOMContentLoaded', function() {
-    // Seleciona todos os elementos com a classe 'modal'
     var modals = document.querySelectorAll('.modal');
-    
-    // Para cada modal, adiciona o evento de reset
     modals.forEach(function(modal) {
         modal.addEventListener('hidden.bs.modal', function () {
-            // Encontra o formulário dentro deste modal específico
             var form = this.querySelector('form');
             if (form) {
                 form.reset();
@@ -261,3 +304,4 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 getUnDoneTasks();
+getUserInfo()

@@ -43,6 +43,17 @@ public class UserService {
                 "User not found! Id: " + id + ", Type: " + User.class.getName()));
     }
 
+    public Optional<User> getUserInfo() {
+        UserSpringSecurity userSpringSecurity = UserService.authenticated();
+
+        if (!Objects.nonNull(userSpringSecurity)) {
+            throw new AuthorizationException("Acesso negado!");
+        }
+
+        Optional<User> user = this.userRepository.findById(userSpringSecurity.getId());
+        return user;
+    }
+
     @Transactional
     public User create(User obj) {
         obj.setId(null);

@@ -1,5 +1,6 @@
 package com.beatrizgg.todoapp.controllers;
 
+import java.util.Optional;
 import java.net.URI;
 
 import javax.validation.Valid;
@@ -34,6 +35,12 @@ public class UserController {
     public ResponseEntity<User> findById(@PathVariable Long id) {
         User obj = this.userService.findById(id);
         return ResponseEntity.ok().body(obj);
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<Optional<User>> findAllUserInfo() {
+        Optional<User> user = this.userService.getUserInfo();
+        return ResponseEntity.ok().body(user);
     }
 
     @PostMapping

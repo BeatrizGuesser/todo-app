@@ -48,8 +48,8 @@
         <button type="button" class="btn text-light" onclick="localStorage.removeItem('Authorization'); window.location = '/view/login.html'">
             SignOut
         </button>
-        <p class="h1 text-center mt-2" id="title">Welcome! <br> Check Your Tasks</p>
-        <button onclick="showProfileInfo()" type="button" class="btn text-light">
+        <p class="h1 text-center mt-2" id="title"></p>
+        <button type="button" class="btn text-light" data-bs-toggle="modal" data-bs-target="#profileModal">
             Profile <i class="bi bi-person"></i>
         </button>
     </div>
@@ -107,6 +107,41 @@
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn bg-custom-gradi text-light" onclick="updateTask()">Save</button>
                     <button type="button" class="btn bg-custom-gradi text-light" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Info Modal -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-3 overflow-hidden">
+                <div class="modal-body p-0">
+                    <div class="row g-0">
+                        <div class="col-md-4 custom-gradi d-flex flex-column justify-content-center align-items-center text-center text-white p-3">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+                                alt="Avatar" class="img-fluid mb-4" style="width: 80px;" />
+                            <h5 id="username" class="mb-0"></h5>
+                            <p id="profile" class="mb-0"></p>
+                        </div>
+                        <div class="col-md-8 position-relative text-dark">
+                            <button type="button" class="btn-close position-absolute top-0 end-0 mt-3 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="p-4">
+                                <h6 class="mb-2">Tasks Left</h6>
+                                <hr class="mt-0 mb-3">
+                                <p id="tasksLeft" class="mb-4"></p>
+                                <div class="d-flex align-items-center mb-2">
+                                    <h6 class="mb-0">Tasks Done</h6>
+                                    <button class="btn bg-custom-gradi text-light btn-sm mx-3">See History</button>
+                                </div>
+                                <hr class="mt-0 mb-3">
+                                <p id="tasksDone" class="mb-4"></p>
+                                <h6 class="mb-2">Tasks Total</h6>
+                                <hr class="mt-0 mb-3">
+                                <p id="tasksTotal" class="mb-0"></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
