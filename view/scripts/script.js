@@ -31,7 +31,7 @@ function show(tasks) {
     let postIts = '';
     for (let task of tasks) {
         postIts += `
-            <div class="col">
+            <div class="col mb-3">
                 <div class="card h-100 bg-custom-gradi">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title text-dark">Task ${task.id}</h5>
@@ -248,19 +248,6 @@ async function doneTask(taskId) {
     }
 }
 
-// Show Profile Info
-function showProfileInfo() {
-    var profileSection = document.getElementById("profileSection");
-    profileSection.classList.remove("d-none");
-    getUserInfo();
-}
-
-// Hide Profile Info
-function hideProfileInfo() {
-    var profileSection = document.getElementById("profileSection");
-    profileSection.classList.add("d-none");
-}
-
 // Get User Logged Info
 async function getUserInfo() {
     let key = "Authorization";
@@ -304,7 +291,7 @@ function showDoneTasks(tasks) {
     } else {
         for (let task of tasks) {
             doneTasksHtml += `
-                <div class="custom-shadow m-6" style="width: 100%;">
+                <div class="custom-shadow p-3 mb-4" style="width: 100%;">
                     <h5 class="text-dark">Task ${task.id}</h5>
                     <p class="text-white flex-grow-1" style="word-wrap: break-word; word-break: break-word;">
                         ${task.description}

@@ -14,6 +14,7 @@
         .bg-custom-gradi { background: linear-gradient(to right bottom, #ad0cd0, #9805d0, #8104cf, #6507cf, #410dce); }
         .bg-custom-gradi:hover { background: linear-gradient(to right bottom, #b33fd5, #a335d5, #8f2fd4, #752fd3, #5235d2); }
         .custom-gradi { background: linear-gradient(to right bottom, #ad0cd0, #9805d0, #8104cf, #6507cf, #410dce); }
+        .custom-purple { color: #8e44ab; }
         .custom-shadow { background: linear-gradient(to right bottom, #ad0cd0, #9805d0, #8104cf, #6507cf, #410dce); box-shadow: 0 4px 13px rgba(0, 0, 0, 0.8); color: white; padding: 20px; border-radius: 8px; }
     </style>
 </head>
@@ -50,7 +51,7 @@
             SignOut
         </button>
         <p class="h1 text-center mt-2" id="title"></p>
-        <button type="button" class="btn text-light" data-bs-toggle="modal" data-bs-target="#profileModal">
+        <button type="button" class="btn text-light" data-bs-toggle="modal" data-bs-target="#profileModal" onclick="getUserInfo()">
             Profile <i class="bi bi-person"></i>
         </button>
     </div>
@@ -84,7 +85,7 @@
                     <form id="taskForm">
                         <div class="mb-3">
                             <label class="form-label custom-purple">Description</label>
-                            <textarea class="form-control" required="true" id="taskDescription" rows="5"></textarea>
+                            <textarea class="form-control" required="true" id="taskDescription" rows="5" maxlength="255"></textarea>
                         </div>
                     </form>
                 </div>
@@ -111,7 +112,7 @@
                         <div class="mb-3">
                             <label class="form-label custom-purple">Description</label>
                             <textarea class="form-control" required="true" id="taskDescriptionUpdate"
-                                rows="5"></textarea>
+                                rows="5" maxlength="255"></textarea>
                         </div>
                     </form>
                 </div>
@@ -165,9 +166,9 @@
     <!-- Done Tasks Modal -->
     <div class="modal fade" id="doneTaskModal" tabindex="-1" aria-labelledby="doneTaskModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
+            <div class="modal-content" style="min-height: 43vh;">
                 <div class="modal-header custom-gradi text-light">
-                    <h5 class="modal-title" id="doneTaskModalLabel">Done Tasks</h5>
+                    <h5 class="modal-title" id="doneTaskModalLabel">Tasks Done</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body px-4 pt-4 pb-0" id="doneTaskModalBody" style="max-height: 58vh; overflow-y: auto;">
