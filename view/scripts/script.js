@@ -3,6 +3,16 @@ function hideLoader() {
     document.getElementById("loading").style.display = "none";
 }
 
+// Hide No Tasks Message
+function hideNoTasks() {
+    document.getElementById("noTasks").style.display = "none";
+}
+
+// Show No Tasks Message
+function showNoTasks() {
+    document.getElementById("noTasks").style.display = "block";
+}
+
 // Display Toast
 function showToast(id, message) {
     const toastElement = document.querySelector(id);
@@ -59,6 +69,8 @@ async function getUnDoneTasks() {
             var data = await response.json();
             console.log("get undone tasks: " + data);
             if (response) hideLoader();
+            if (data.length != 0) hideNoTasks();
+            if (data.length == 0) showNoTasks();
             show(data);
         } else {
             const errorData = await response.json();
@@ -284,14 +296,21 @@ async function getUserInfo() {
 // Display Done Tasks
 function showDoneTasks(tasks) {
     let doneTasksHtml = '';
-    for (let task of tasks) {
-        doneTasksHtml += `
-            <div class="custom-shadow p-3 mb-4" style="width: 100%;">
-                <h5 class="text-dark">Task ${task.id}</h5>
-                <p class="text-white flex-grow-1" style="word-wrap: break-word; word-break: break-word;">
-                    ${task.description}
-                </p>
+    if (tasks.length == 0) {
+        doneTasksHtml = `
+            <div class="text-center text-dark p-3 mb-4">
+                <h5 class="my-5">You don't have any <br> tasks done yet</h5>
             </div>`;
+    } else {
+        for (let task of tasks) {
+            doneTasksHtml += `
+                <div class="custom-shadow m-6" style="width: 100%;">
+                    <h5 class="text-dark">Task ${task.id}</h5>
+                    <p class="text-white flex-grow-1" style="word-wrap: break-word; word-break: break-word;">
+                        ${task.description}
+                    </p>
+                </div>`;
+        }
     }
     document.getElementById("doneTaskModalBody").innerHTML = doneTasksHtml;
     const doneTaskModal = new bootstrap.Modal(document.getElementById('doneTaskModal'));

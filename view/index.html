@@ -18,7 +18,7 @@
     </style>
 </head>
 
-<body class="bg-dark text-light min-vh-100 mb-3">
+<body class="bg-dark text-light min-vh-100">
 
     <!-- Loading -->
     <div class="d-flex justify-content-center">
@@ -53,6 +53,11 @@
         <button type="button" class="btn text-light" data-bs-toggle="modal" data-bs-target="#profileModal">
             Profile <i class="bi bi-person"></i>
         </button>
+    </div>
+
+    <!-- No Tasks Message -->
+    <div id="noTasks" class="text-center position-fixed top-50 start-50 translate-middle">
+        <h4>You don't have any tasks yet</h4>
     </div>
 
     <!-- Display Tasks -->
@@ -140,7 +145,9 @@
                                 <p id="tasksLeft" class="mb-4"></p>
                                 <div class="d-flex align-items-center mb-2">
                                     <h6 class="mb-0">Tasks Done</h6>
-                                    <button class="btn bg-custom-gradi text-light btn-sm mx-3" onclick="getDoneTasks()">See History</button>
+                                    <button class="btn bg-custom-gradi text-light btn-sm mx-3" onclick="getDoneTasks()">
+                                        See History
+                                    </button>
                                 </div>
                                 <hr class="mt-0 mb-3">
                                 <p id="tasksDone" class="mb-4"></p>
