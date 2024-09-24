@@ -1,5 +1,3 @@
-let userId = null;
-
 // Loading
 function hideLoader() {
     document.getElementById("loading").style.display = "none";
@@ -45,7 +43,6 @@ function show(tasks) {
     }
     document.getElementById("tasks").innerHTML = postIts;
 }
-
 
 // Display UnDone Tasks
 async function getUnDoneTasks() {
@@ -94,7 +91,7 @@ async function postTask() {
                     description: description,
                 }),
             });
-            
+
             if (response.ok) {
                 showToast("#okToast", "Task created successfully.");
                 getUnDoneTasks();
@@ -150,11 +147,11 @@ async function getTask(taskId) {
 async function updateTask() {
     const taskId = document.getElementById("taskModalUpdate").getAttribute('data-task-id');
     const description = document.getElementById("taskDescriptionUpdate").value;
- 
+
     console.log("Updating task id " + taskId + " with description: " + description);
- 
+
     if (description) {
-         let key = "Authorization";
+        let key = "Authorization";
         try {
             const response = await fetch(`http://localhost:8080/task/${taskId}`, {
                 method: "PUT",
@@ -167,7 +164,7 @@ async function updateTask() {
                     description: description,
                 }),
             });
- 
+
             if (response.ok) {
                 showToast("#okToast", "Task updated successfully.");
                 getUnDoneTasks();
@@ -185,7 +182,7 @@ async function updateTask() {
     }
     const modal = bootstrap.Modal.getInstance(document.getElementById('taskModalUpdate'));
     modal.hide();
- }
+}
 
 // Delete Task
 async function deleteTask(taskId) {
@@ -284,10 +281,53 @@ async function getUserInfo() {
     }
 }
 
+// Display Done Tasks
+function showDoneTasks(tasks) {
+    let doneTasksHtml = '';
+    for (let task of tasks) {
+        doneTasksHtml += `
+            <div class="custom-shadow p-3 mb-4" style="width: 100%;">
+                <h5 class="text-dark">Task ${task.id}</h5>
+                <p class="text-white flex-grow-1" style="word-wrap: break-word; word-break: break-word;">
+                    ${task.description}
+                </p>
+            </div>`;
+    }
+    document.getElementById("doneTaskModalBody").innerHTML = doneTasksHtml;
+    const doneTaskModal = new bootstrap.Modal(document.getElementById('doneTaskModal'));
+    doneTaskModal.show();
+}
+
+// Get Done Tasks
+async function getDoneTasks() {
+    let key = "Authorization";
+    try {
+        const response = await fetch("http://localhost:8080/task/done", {
+            method: "GET",
+            headers: new Headers({
+                Authorization: localStorage.getItem(key),
+            }),
+        });
+        if (response.ok) {
+            var data = await response.json();
+            console.log("get done tasks: " + data);
+            if (response) hideLoader();
+            showDoneTasks(data);
+        } else {
+            const errorData = await response.json();
+            const errorMessage = errorData.message || "Failed to fetch done tasks.";
+            showToast("#errorToast", errorMessage);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        showToast("#errorToast", "An unexpected error occurred while fetching done tasks.");
+    }
+}
+
 // Reset modal
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     var modals = document.querySelectorAll('.modal');
-    modals.forEach(function(modal) {
+    modals.forEach(function (modal) {
         modal.addEventListener('hidden.bs.modal', function () {
             var form = this.querySelector('form');
             if (form) {
